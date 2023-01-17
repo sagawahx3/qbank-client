@@ -7,7 +7,8 @@ import '../styles/button.scss'
 var quest = BankInstance.getQuestion()
 
 export function QuestionRender(props){
-    
+
+    const [r, setQuestion] = useState(0)
     const [data, setData] = useState(null)
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -39,16 +40,13 @@ export function QuestionRender(props){
 
     if(error) return "Error!";
 
-    console.log(data)
-
-    console.log(data[0].id)
-
+    var count= Object.keys(data).length;
 
     function checkAnswer(answer){
  
         let x = quest.checkAnswer(answer)
     
-        if(answer == data[0].correct){
+        if(answer == data[r].correct){
             setCorrect(1);
             UserInstance.answeredQuestions.push(quest.id)
             UserInstance.rightQuestions.push(quest.id)
@@ -63,10 +61,11 @@ export function QuestionRender(props){
 
      function getNewQuestion(){
 
-        setAnswer(0)
+        var v = Math.floor((Math.random() * count));
+        setQuestion(v +1)
+        setAnswer(0);
         setCorrect(0);
-        quest = BankInstance.getQuestion()
-
+        
      }
     
 
@@ -75,20 +74,20 @@ export function QuestionRender(props){
              <>
              <br />
              <br />
-            <h1>Questão {data[0].id}</h1>
+            <h1>Questão {data[r].id}</h1>
             <br />
-            <h2>{data[0].body}</h2>
+            <h2>{data[r].body}</h2>
             <br />
-            <button type="button" onClick = {() => {checkAnswer(1)}}>{data[0].ans1}</button><br></br>
-            <button type="button" onClick = {() => {checkAnswer(2)}}>{data[0].ans2}</button><br></br>
-            <button type="button" onClick = {() => {checkAnswer(3)}}>{data[0].ans3}</button><br></br>
-            <button type="button" onClick = {() => {checkAnswer(4)}}>{data[0].ans4}</button><br></br>
-            <button type="button" onClick = {() => {checkAnswer(5)}}>{data[0].ans5}</button><br></br>
+            <button type="button" onClick = {() => {checkAnswer(1)}}>{data[r].ans1}</button><br></br>
+            <button type="button" onClick = {() => {checkAnswer(2)}}>{data[r].ans2}</button><br></br>
+            <button type="button" onClick = {() => {checkAnswer(3)}}>{data[r].ans3}</button><br></br>
+            <button type="button" onClick = {() => {checkAnswer(4)}}>{data[r].ans4}</button><br></br>
+            <button type="button" onClick = {() => {checkAnswer(5)}}>{data[r].ans5}</button><br></br>
             </>
             
             {quest == 0 &&
             <>
-            <h1>Não há questões há serem exibidas.</h1>
+            <h1>Não há questões a serem exibidas.</h1>
             </>
            }
             { answerstate == 1 &&
@@ -104,7 +103,7 @@ export function QuestionRender(props){
             <>
             <br></br>
             <p>Resposta incorreta!</p><br></br>
-            <p>A resposta correta é: {data[0].correct} </p><br></br>
+            <p>A resposta correta é: {data[r].correct} </p><br></br>
             <button type="button" onClick = {() => {getNewQuestion()}}>Nova Questão</button><br></br>
             </>
             }

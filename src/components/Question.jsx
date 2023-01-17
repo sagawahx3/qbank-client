@@ -1,15 +1,12 @@
 export class Question{
 
-    id = 0;
-
-    constructor( id, text, answer1, answer2, answer3, answer4, correct) {
-        
-        this.id = id;
-        this.text = text;
-        this.answer1 = answer1;
-        this.answer2 = answer2;
-        this.answer3 = answer3;
-        this.answer4 = answer4;
+    constructor( text, answer1, answer2, answer3, answer4, correct) {
+        this.body = text;
+        this.ans1 = answer1;
+        this.ans2 = answer2;
+        this.ans3 = answer3;
+        this.ans4 = answer4;
+        this.ans5 = answer4;
         this.correct = correct;
       }
       
@@ -17,10 +14,5 @@ export class Question{
        if(answer == this.correct) return 1;
        else return 2;
      }
-
-      getId(){
-        return this.id
-      }
-
 
 }
