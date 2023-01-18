@@ -8,6 +8,8 @@ let instance;
 
 class User{
 
+  auth = null
+  token = '';
   answeredQuestions = []
   rightQuestions = []
   wrongQuestions = []
@@ -33,11 +35,19 @@ export class UserManager extends React.Component {
         totalQuestions: UserInstance.answeredQuestions.length,
         rightAnswered: UserInstance.rightQuestions.length,
         wrongAnswered: UserInstance.wrongQuestions.length,
+        token: UserInstance.token.length,
       };
   
     }
   
     render() {
+
+      if(this.state.token < 1){
+        return(
+          <p>É necessário realizar o login.</p>
+        );
+      }
+
       return (
         <>
         <br />
