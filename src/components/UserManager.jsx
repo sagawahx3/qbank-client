@@ -3,13 +3,14 @@ import  BankInstance  from "./Bank"
 import { Question } from "./Question"
 import React from "react";
 import Progress from 'react-progressbar';
+import withAuth from "./auth/AuthTools";
 
 let instance;
 
 class User{
 
   auth = null
-  token = '';
+  token = null;
   answeredQuestions = []
   rightQuestions = []
   wrongQuestions = []
@@ -20,6 +21,10 @@ class User{
       throw new Error("Cannot create a new instance of this class")
 
       instance = this;
+    }
+
+    getToken(){
+      return this.token
     }
 
 }

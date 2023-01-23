@@ -1,17 +1,23 @@
 import React from "react";
 import UserInstance from "../UserManager"
 import { useState, useEffect } from "react"
+import { redirect, useNavigate } from "react-router-dom";
+
+function goRedirect(){
+    useNavigate('/user')
+}
 
 class UserAuth{
 
     username = '';
     password = '';
+
   
       constructor(username,password){
 
         this.username = username
         this.password = password
-        
+
       }
   
 }
@@ -24,11 +30,13 @@ export class LoginForm extends React.Component {
             username: '',
             password: '',
             token: '',
+            wrongPassword: false
+
         };
 
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleChange = this.handleChange.bind(this);
-    
+
       }
       
     handleSubmit(event){
@@ -56,15 +64,21 @@ export class LoginForm extends React.Component {
                 return Promise.reject(error);
             }
 
-            UserInstance.token = data.key
+            localStorage.token = data.key
             UserInstance.auth = user
+            window.location.href = 'http://localhost:8080/';
+
         })
         .catch(error => {
             this.setState({ errorMessage: error.toString() });
             console.error('There was an error!', error);
-        });
-    }
+            this.state.wrongPassword = true;
 
+        });
+
+
+    }
+    
     handleChange(event) {
         event.preventDefault();
         const target = event.target;
@@ -79,6 +93,8 @@ export class LoginForm extends React.Component {
 
     render() {
         return (
+          <div>
+
             <form onSubmit={this.handleSubmit}>
             <br />
             <br />
@@ -97,7 +113,7 @@ export class LoginForm extends React.Component {
             Senha
             <input
               name="password"
-              type="text"
+              type="password"
               value={this.state.password}
               onChange={this.handleChange}
               />
@@ -106,6 +122,12 @@ export class LoginForm extends React.Component {
           <br />
         <input id="button" type="submit" value="Enviar" />
         </form>
+        {this.state.wrongPassword &&
+            <>
+            <p>Dados inválidos.</p>
+            </>
+           }
+        </div>        
         );
     }
 }
