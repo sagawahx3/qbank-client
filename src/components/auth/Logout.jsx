@@ -1,6 +1,7 @@
 import React from 'react'
 import { render } from 'react-dom';
 import {useEffect, useState, setState } from 'react'
+import { cookies } from '../../app';
 
 
 export function Logout(props){
@@ -24,8 +25,9 @@ export function Logout(props){
                     const error = (data && data.message) || response.status;
                     return Promise.reject(error);
                 }
-    
-                localStorage.clear()
+                
+                cookies.remove('token')
+
                 window.location.href = 'http://localhost:8080/';
     
             })

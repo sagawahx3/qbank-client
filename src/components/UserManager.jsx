@@ -3,7 +3,8 @@ import  BankInstance  from "./Bank"
 import { Question } from "./Question"
 import React from "react";
 import Progress from 'react-progressbar';
-import withAuth from "./auth/AuthTools";
+import { cookies } from "../app";
+import { UserAuth } from "./auth/LoginForm";
 
 let instance;
 
@@ -37,27 +38,62 @@ export class UserManager extends React.Component {
     constructor(props) {
       super(props);
       this.state = {
-        totalQuestions: UserInstance.answeredQuestions.length,
-        rightAnswered: UserInstance.rightQuestions.length,
-        wrongAnswered: UserInstance.wrongQuestions.length,
-        token: UserInstance.token.length,
+        username: cookies.get('username') || null,
+        totalQuestions: 0,
+        rightAnswered: 0,
+        wrongAnswered: 0,
+        token: cookies.get('token') || null,
+        data: null,
+        error: null,
+        loading: true
       };
+
+      let user = new UserAuth(
+        this.state.username
+        );
+
+        const requestOptions = {
+          method: 'GET',
+          headers: { 
+            'Authorization': `Token `+ this.state.token,
+          },
+      };
+
+      console.log(requestOptions.headers.Authorization)
+        fetch('http://127.0.0.1:8000/auth/user/', requestOptions)
+        .then(response =>{
+            if(response.ok){
+                return response.json()
+            }
+            throw response;
+        })
+        .then( data=> {
+            this.state.data = data
+            console.log(data)
+        })
+        .catch(error => {
+            console.error("Error fetching data:", error);
+            this.state.error = error
+        })
+        .finally(()=>{
+            this.state.loading = false
+        })
   
     }
+    
   
     render() {
 
-      if(this.state.token < 1){
+      if(!this.state.token){
         return(
           <p>É necessário realizar o login.</p>
         );
       }
-
       return (
         <>
         <br />
         <br />
-        <p>Questões registradas: {(BankInstance.id -1)}</p>
+        <p>Usuário: {this.state.username}</p>
         <br />
         <br />
         <p>Respostas totais: {this.state.totalQuestions}</p>

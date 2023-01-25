@@ -4,17 +4,15 @@ import { Link } from 'react-router-dom'
 import '../styles/header.scss'
 import UserInstance from './UserManager'
 import { isAuth } from './auth/AuthTools'
-
+import { cookies } from '../app'
 
 const Header=()=>{
 
-    console.log(isAuth)
-
-    if (isAuth) {
+    if (!!cookies.get('token')){
 
         return(
             <section class="header">
-            <ul className="header-ul">
+            <ul class="header-ul">
             <li><a><Link to="/">Início</Link></a></li>
             <li><a><Link to="/answer">Responder</Link></a></li>
             <li><a><Link to="/insert">Inserir</Link></a></li>
@@ -27,7 +25,7 @@ const Header=()=>{
     else{
                 return(
                     <section class="header">
-                    <ul className="header-ul">
+                    <ul class="header-ul">
                     <li><a><Link to="/">Início</Link></a></li>
                     <li><a><Link to="/login">Login</Link></a></li>
                     </ul>

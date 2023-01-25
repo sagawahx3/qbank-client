@@ -2,12 +2,11 @@ import React from "react";
 import UserInstance from "../UserManager"
 import { useState, useEffect } from "react"
 import { redirect, useNavigate } from "react-router-dom";
+import { withCookies, Cookies } from 'react-cookie';
+import { instanceOf } from 'prop-types';
+import { cookies } from "../../app";
 
-function goRedirect(){
-    useNavigate('/user')
-}
-
-class UserAuth{
+export class UserAuth{
 
     username = '';
     password = '';
@@ -26,10 +25,11 @@ export class LoginForm extends React.Component {
 
     constructor(props) {
         super(props);
+
         this.state = {
-            username: '',
+            username: cookies.get('username') || null,
             password: '',
-            token: '',
+            token: cookies.get('token') || null,
             wrongPassword: false
 
         };
@@ -49,8 +49,11 @@ export class LoginForm extends React.Component {
 
       const requestOptions = {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(user)
+        headers: { 
+        'Content-Type': 'application/json', 
+        "Access-Control-Allow-Origin": "true"
+        },
+        body: JSON.stringify(user),
     };
     fetch('http://127.0.0.1:8000/auth/login/', requestOptions)
         .then(async response => {
@@ -64,8 +67,9 @@ export class LoginForm extends React.Component {
                 return Promise.reject(error);
             }
 
-            localStorage.token = data.key
-            UserInstance.auth = user
+            cookies.set('token', data.key, { path: '/' });
+            cookies.set('username', this.state.username, { path: '/' });
+
             window.location.href = 'http://localhost:8080/';
 
         })
@@ -92,6 +96,9 @@ export class LoginForm extends React.Component {
       }
 
     render() {
+
+
+
         return (
           <div>
 
@@ -131,3 +138,5 @@ export class LoginForm extends React.Component {
         );
     }
 }
+
+export default withCookies(LoginForm);

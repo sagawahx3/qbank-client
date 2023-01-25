@@ -1,10 +1,7 @@
 
 import UserInstance from "../UserManager";
 import React from "react";
-
-export const isAuth = !!localStorage.token;
-
-
+import { Cookies, withCookies } from "react-cookie";
 
 export const withAuth = (Component) => {
     const AuthRoute = () => {
