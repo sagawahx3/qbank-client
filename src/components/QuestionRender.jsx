@@ -3,6 +3,7 @@ import BankInstance from "./Bank"
 import { Question } from "./Question"
 import UserInstance from "./UserManager"
 import '../styles/button.scss'
+import {Link} from "react-router-dom";
 
 var quest = BankInstance.getQuestion()
 
@@ -65,7 +66,7 @@ export function QuestionRender(props){
         setQuestion(v +1)
         setAnswer(0);
         setCorrect(0);
-        
+
      }
     
 

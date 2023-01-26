@@ -44,6 +44,7 @@ export class UserManager extends React.Component {
         wrongAnswered: 0,
         token: cookies.get('token') || null,
         data: null,
+        userinfo: null,
         error: null,
         loading: true
       };
@@ -70,6 +71,17 @@ export class UserManager extends React.Component {
         .then( data=> {
             this.state.data = data
             console.log(data)
+
+            fetch(`http://127.0.0.1:8000/userinfo/${this.state.data.pk}`, requestOptions2)
+        .then(response =>{
+            if(response.ok){
+                return response.json()
+            }
+            throw response;
+        })
+        .then( data=> {
+            this.state.userinfo = data
+            console.log(this.state.userinfo)
         })
         .catch(error => {
             console.error("Error fetching data:", error);
@@ -78,7 +90,24 @@ export class UserManager extends React.Component {
         .finally(()=>{
             this.state.loading = false
         })
-  
+
+        })
+        .catch(error => {
+            console.error("Error fetching data:", error);
+            this.state.error = error
+        })
+        .finally(()=>{
+            this.state.loading = false
+        })
+
+       const requestOptions2 = {
+          method: 'GET',
+          headers: { 
+            'Authorization': `Token `+ this.state.token,
+          },
+      };
+
+      
     }
     
   

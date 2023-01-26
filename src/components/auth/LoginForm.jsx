@@ -50,9 +50,7 @@ export class LoginForm extends React.Component {
       const requestOptions = {
         method: 'POST',
         headers: { 
-        'Content-Type': 'application/json', 
-        "Access-Control-Allow-Origin": "true"
-        },
+        'Content-Type': 'application/json'        },
         body: JSON.stringify(user),
     };
     fetch('http://127.0.0.1:8000/auth/login/', requestOptions)
