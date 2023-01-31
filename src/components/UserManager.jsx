@@ -35,20 +35,33 @@ const UserInstance = new User();
 export default UserInstance;
 
 export class UserManager extends React.Component {
+
+  wrongAns = 0
+
+
     constructor(props) {
       super(props);
+
       this.state = {
+        isFetching: false,
         username: cookies.get('username') || null,
         totalQuestions: 0,
         rightAnswered: 0,
         wrongAnswered: 0,
         token: cookies.get('token') || null,
         data: null,
-        userinfo: null,
+        userinfo: {wrongAns: 0},
         error: null,
         loading: true
       };
 
+  
+      
+    }
+
+componentDidMount() {
+  console.log("fetching")
+  this.state.isFetching = true
       let user = new UserAuth(
         this.state.username
         );
@@ -72,7 +85,7 @@ export class UserManager extends React.Component {
             this.state.data = data
             console.log(data)
 
-            fetch(`http://127.0.0.1:8000/userinfo/${this.state.data.pk}`, requestOptions2)
+            fetch(`http://127.0.0.1:8000/userdata/first/?username=${this.state.username}`, requestOptions2)
         .then(response =>{
             if(response.ok){
                 return response.json()
@@ -80,8 +93,7 @@ export class UserManager extends React.Component {
             throw response;
         })
         .then( data=> {
-            this.state.userinfo = data
-            console.log(this.state.userinfo)
+            this.setState({userinfo: data, isFetching: false})
         })
         .catch(error => {
             console.error("Error fetching data:", error);
@@ -107,11 +119,11 @@ export class UserManager extends React.Component {
           },
       };
 
-      
-    }
+  }
     
   
     render() {
+      
 
       if(!this.state.token){
         return(
@@ -125,11 +137,12 @@ export class UserManager extends React.Component {
         <p>Usuário: {this.state.username}</p>
         <br />
         <br />
-        <p>Respostas totais: {this.state.totalQuestions}</p>
+        <p>Respostas totais: {this.state.userinfo.wrongAns}</p>
         <br />
         <>
         <h1>Taxa de acerto: {(this.state.rightAnswered/this.state.totalQuestions) *100}%</h1>
         <br />
+        <p>{this.state.isFetching ? 'Fetching data...' : ''}</p>
         <div id="progressbar">
         <Progress completed= {(this.state.rightAnswered/this.state.totalQuestions) *100} />
         </div>
